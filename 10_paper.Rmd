@@ -1,5 +1,5 @@
 ---
-title: "State of the Union Adresses"
+title: "State of the Union Addresses"
 author: "Gina Reynolds, Susie Q., Johny J."
 date: "2/2/2019"
 output: 
@@ -82,12 +82,9 @@ knitr::kable(sotu_texts_mod %>% head(14), caption = "This table contains preside
 
 Here I show some of the relationships in the data visually:
 
-
-
 ```{r year, fig.cap = "Timing of state of the union by year.  SOTUs that follow election years are colored with blue.", out.width='\\textwidth', fig.align='center'}
 knitr::include_graphics("figures/sotu_timing_delivery.png")
 ```
-
 
 In figure \@ref(fig:year) we use LOESS smoothing to summarize the relationship between year and time in year for the categories "following election year" and "not following".  In the linear modelling exercise below, we remove the 1973 cases, given that they are so unusual --- in light of the Nixon impeachment, there were multiple SOTU's delivered that year. 
 
@@ -97,7 +94,7 @@ In figure \@ref(fig:year) we use LOESS smoothing to summarize the relationship b
 
 <!-- If compiling to html: -->
 
-<!-- We load the models that we've estimated and save out,then prepare the table using stargazer.  -->
+We load the models that we've estimated and save out,then prepare the table using stargazer.
 
 ```{r regtable_html, results = "asis"}
 # load models that have been saved in .Rdata file previously
@@ -153,7 +150,7 @@ Note that the visualization of the linear models do not represent the full model
 # Conclusion
 
 
-The analysis shows the timing of State of the Union addresses is increasingly late in the year and is dependent on whether it follows an election year.  While the 2019 State of the Union address is in February, which is unusual for a large departure from the trend.  In future work, we might look at plotting prediction intervals as well as confidence intervasl  Now is a good time to spell check (Edit -> Spell Check...)!   
+The analysis shows the timing of State of the Union addresses is increasingly late in the year and is dependent on whether it follows an election year.  While the 2019 State of the Union address is in February, which is unusual for a large departure from the trend.  In future work, we might look at plotting prediction intervals as well as confidence intervals  Now is a good time to spell check (Edit -> Spell Check...)!   
 
 
 # References 
