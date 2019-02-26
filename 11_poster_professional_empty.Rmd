@@ -1,0 +1,94 @@
+---
+title: "When is the State of the Union Delivered?"
+author: "Dr. Evangeline (Gina) Reynolds^1^, James Smith^1,2^, and Jane Smith^3^"
+institute: "1. Korbel School of International Studies at University of Denver; 2. Department and University Two; 3. Department and University Three"
+date: "2018-11-30"
+references:
+  - id: R-base
+    author:
+    - family: "R Core Team"
+      given: ""
+    title: 'R: A Language and Environment for Statistical Computing'
+    issued:
+      year: 2018
+    URL: https://www.r-project.org
+  - id: R-pagedown
+    author:
+    - family: Xie
+      given: Yihui
+    - family: Lesur
+      given: Romain
+    title: 'Paginate the HTML Output of R Markdown with CSS for Print'
+    issued:
+      year: 2018
+    URL: https://github.com/rstudio/pagedown
+output:
+  pagedown::poster_jacobs:
+    self_contained: false
+    pandoc_args: --mathjax
+---
+
+
+<!-- In your final paper you won't often want to echo code. Or see warning or messages on coding at this point.  So let's set the knitter setting to echo, warning and message to F globally -->
+
+```{r setup, echo=FALSE, message=F, warning=F}
+knitr::opts_chunk$set(echo = F, warning = F, message = F)
+library(tidyverse)
+```
+
+Motivation {.block}
+================================================================================
+
+
+
+Related Literature
+================================================================================
+
+
+
+
+
+
+Theory 
+================================================================================
+
+
+
+
+Hypotheses
+================================================================================
+
+
+
+
+Important Result {.block}
+================================================================================
+
+
+Data
+================================================================================
+
+
+
+
+
+
+Model
+================================================================================
+
+
+
+Conclusions
+================================================================================
+
+
+Key References
+================================================================================
+
+
+
+Data sources {data-color=red}
+================================================================================
+
+
+
