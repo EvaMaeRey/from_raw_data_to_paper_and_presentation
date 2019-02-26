@@ -1,0 +1,70 @@
+---
+title: "An HTML poster example"
+author: "Yihui Xie"
+date: "`r Sys.Date()`"
+output:
+  pagedown::poster_relaxed:
+    self_contained: false
+bibliography: packages.bib
+references:
+  - id: remarkjs
+    author:
+    - family: Bang
+      given: Ole Petter
+    title: 'A simple, in-browser, markdown-driven slideshow tool'
+    issued:
+      year: 2018
+    URL: https://remarkjs.com
+  - id: naruto
+    author:
+    - family: Kishimoto
+      given: Masashi
+    title: 'Naruto Shippūden'
+    issued:
+      year: 2007
+    URL: https://en.wikipedia.org/wiki/Naruto
+---
+
+
+
+
+
+Presentation Ninja [with]{.tiny} R and xaringan
+================================================================================
+
+
+
+
+
+[Authors]{.red}
+================================================================================
+
+
+
+
+
+[Motivation]{.blue}
+================================================================================
+
+
+
+
+
+[Schedule]{.pink}
+================================================================================
+
+
+
+
+
+[Contents]{.green}
+================================================================================
+
+
+
+[Bibliography]{.yellow}
+================================================================================
+
+```{r, include=FALSE}
+knitr::write_bib(c('knitr', 'rmarkdown', 'xaringan'), 'packages.bib')
+```

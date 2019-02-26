@@ -1,0 +1,198 @@
+---
+title: "When is the State of the Union delivered?"
+subtitle: "\u2694 <br/>with xaringan and xaringanthemer"  
+author: "Gina Reynolds"
+date: '`r Sys.Date()`'
+output:
+  xaringan::moon_reader:
+    chakra: libs/remark-latest.min.js
+    lib_dir: libs
+    css: xaringan-themer.css
+    nature:
+      beforeInit: "https://platform.twitter.com/widgets.js"
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+library(tidyverse)
+```
+
+
+
+
+```{r, echo=FALSE}
+knitr::opts_chunk$set(echo = F, warning = F, message = F)
+```
+
+
+---
+
+# Abstract
+
+- State of the Union addresses are a classic corpus for students of text analysis. 
+- In this paper you'll see time-in-year by year plots and a model of the timing.  
+
+
+---
+
+
+- Motivation for addressing this question actually comes from Kenneth Benoit who conducted a quick [analysis](https://twitter.com/kenbenoit/status/1088304778088566785) on this question.  
+
+
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Far from unprecedented for a <a href="https://twitter.com/hashtag/stateoftheunion?src=hash&amp;ref_src=twsrc%5Etfw">#stateoftheunion</a> <a href="https://twitter.com/hashtag/SOTU?src=hash&amp;ref_src=twsrc%5Etfw">#SOTU</a> address to be held in Feb or to be delivered written. And if written, likely to use more sophisticated language! Details in my forthcoming <a href="https://twitter.com/AJPS_Editor?ref_src=twsrc%5Etfw">@AJPS_Editor</a> paper with <a href="https://twitter.com/kmmunger?ref_src=twsrc%5Etfw">@kmmunger</a>  <a href="https://twitter.com/arthur_spirling?ref_src=twsrc%5Etfw">@arthur_spirling</a>. <a href="https://t.co/NKhqkjLoM8">https://t.co/NKhqkjLoM8</a> <a href="https://t.co/7Rb7XLT8FW">pic.twitter.com/7Rb7XLT8FW</a></p>&mdash; Kenneth Benoit (@kenbenoit) <a href="https://twitter.com/kenbenoit/status/1088304778088566785?ref_src=twsrc%5Etfw">January 24, 2019</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+---
+
+# Introduction
+
+The 2019 government shutdown had many people wondering, when will US State of the Union address be delivered by the President.  Would it be pushed later than what is considered "normal." 
+
+
+
+---
+
+# Literature Review
+
+
+
+```{r, load_refs, echo=FALSE, cache=FALSE}
+library(RefManageR)
+BibOptions(check.entries = FALSE, 
+           bib.style = "authoryear", 
+           cite.style = 'alphabetic', 
+           style = "markdown",
+           hyperlink = FALSE, 
+           dashed = FALSE)
+myBib <- ReadBib("./literature/bibliography.bib", check = FALSE)
+```
+
+The texts of the State of the Union addresses have been studied by scholars including Benoit, Munger and Spirling; they offer an interesting analysis of State of the Union addresses by US presidents, noting that SOTU that are not delivered orally tend to use more complex language. There are several R text analysis packages .  These entries are included in the literature/bibliography.bib document that is referenced in the YMAL.  
+
+`r Cite(myBib, c("silge2016tidytext", "benoit2016quanteda", "benoit2018measuring"))`
+
+> In this section you might write quota a large selection which you will want to indent.
+
+
+---
+
+# Theory and Hypotheses
+
+This analysis was exploratory.  It is well known that modern SOTU addresses are delivered early in the year.  After plotting the data, what seemed to matter was year of delivery, and if the SOTU followed an election year.  We tried to follow the advice in the e-book [The Fundamentals of Data Visualization](https://serialmentor.com/dataviz).
+
+Data visualization categories from *"The Fundamentals of Data Visualization."*
+
+Category | Description
+-----|------
+Bad  | Misrepresents data or confuse
+Ugly | Not pleasing
+Good | Not bad and not ugly
+
+
+
+
+---
+
+# Data 
+
+Last 8 presidents:
+
+
+```{r nice-tab}
+library(tidyverse)
+# load cleaned data
+load("data_products/sotu_texts.Rdata")
+sotu_texts_mod <- sotu_texts %>% 
+  mutate(president = fct_inorder(president)) %>% 
+  group_by(president) %>% tally() %>% 
+  rename(President = president) %>% 
+  rename(`Number of Addresses` = n) 
+
+knitr::kable(sotu_texts_mod %>% head(8), format = "html")
+```
+
+
+---
+class: center
+
+# Analysis
+
+
+---
+
+## Visualization of relationships
+
+```{r year, fig.cap = "Timing of state of the union by year.  SOTUs that follow election years are colored with blue.", out.width='\\textwidth', fig.align='center'}
+knitr::include_graphics("figures/sotu_timing_delivery.png")
+```
+
+
+<!-- In figure \@ref(fig:year) we use LOESS smoothing to summarize the relationship between year and time in year for the categories "following election year" and "not following".  In the linear modelling exercise below, we remove the 1973 cases, given that they are so unusual --- in light of the Nixon impeachment, there were multiple SOTU's delivered that year.  -->
+
+---
+
+
+<!-- If compiling to html: -->
+
+<!-- We load the models that we've estimated and save out,then prepare the table using stargazer.  -->
+
+```{r regtable_html, results = "asis"}
+# load models that have been saved in .Rdata file previously
+load("data_products/models.Rdata")
+stargazer::stargazer(lateness_by_year,
+                     lateness_following_election, lateness_full, lateness_full_interaction,
+                     dep.var.labels = "Days elapsed since January 1st",
+                     covariate.labels = c("year", "post election", "year*post election"),
+                     title = "Models of time elapsed in year before State of the Union Address", omit.stat = c("all"),
+                     style = "qje",
+                     type = "html")
+```
+
+
+
+
+As you can see in the regression table \@ref(tab:regtable), the R^2 for the full model with an interaction term is `r round(summary(lateness_full_interaction)$r.squared, 3)`.
+
+---
+
+The full model formula with the interaction is:
+
+
+$$ DaysSinceJan1 = $$
+$$\beta_0  + \beta_1YEAR + B_2FollowingElection + B_3Year*FollowingElection + \epsilon $$
+
+---
+
+## Visualization
+
+```{r, fig.cap = "Timing of state of the union by year.  SOTUs that follow election years are colored with blue.",  out.width='\\textwidth', fig.align='center'}
+# Include the figure that you have saved out in working files
+knitr::include_graphics("figures/sotu_timing_model.png")
+```
+
+
+
+
+---
+
+# Conclusion
+
+
+The analysis shows the timing of State of the Union addresses is increasingly late in the year and is dependent on whether it follows an election year.  While the 2019 State of the Union address is in February, which is unusual for a large departure from the trend.  In future work, we might look at plotting prediction intervals as well as confidence intervasl  Now is a good time to spell check (Edit, then Spell Check...)!   
+
+
+---
+
+# References
+
+
+
+
+```{r, 'refs', results='asis', echo=FALSE}
+PrintBibliography(myBib)
+```
+

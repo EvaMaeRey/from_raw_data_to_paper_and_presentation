@@ -1,0 +1,165 @@
+---
+title: "SOTU analysis"
+author: "Evangeline Reynolds"
+date: "2/1/2018"
+output: html_document
+---
+
+# Set chunk options
+
+"Global" options will apply to each code chunk.  This chunk option is echo = FALSE, so the code will not print in the compiled document (html).
+
+```{r, echo = F}
+knitr::opts_chunk$set(message = F, warning = F)
+```
+
+
+
+```{r}
+library(tidyverse)
+library(ggrepel)
+```
+
+```{r}
+load("data_products/sotu_texts.Rdata")
+
+sotu_texts <- sotu_texts %>% select(-transcript)
+
+g0 <- 
+  sotu_texts %>% 
+  group_by(president) %>% 
+  tally() %>% 
+  arrange(n) %>% # piping data into the ggplot
+  ggplot() +
+  aes(x = fct_inorder(president), y = n) +
+  geom_col(fill = "blue", alpha = .3) +
+  labs(x = "") +
+  labs(y = "") +
+  coord_flip() +
+  labs(title = "Number of State of the Union Adresses") +
+  labs(subtitle = "Data: Speeches from 1790 to 2018 from www.presidency.ucsb.edu") +
+  labs(caption = "Vis: @EvaMaeRey\nData Collection: github/BrianWeinstein/state-of-the-union") +
+  theme_minimal(base_size = 6)
+
+g0
+
+ggsave("figures/num_speeches_per_pres.png", plot = g0, height = 5, width = 4)
+```
+
+
+
+```{r}
+options(scipen = 10)
+
+sotu_modified <- sotu_texts %>% 
+  mutate(year = lubridate::year(date)) %>% 
+  mutate(month_day = lubridate::as_date(str_replace(date, "\\d\\d\\d\\d", "2000"))) %>% 
+  mutate(id = 1:n()) %>% filter(year > 1934) %>% 
+  mutate(last_name = str_extract(president, "\\w+$")) %>% 
+  mutate(election_year_plus_one = year %in% seq(1933, 2017, by = 4)) %>% 
+  mutate(days_elapsed_since_jan_1 = 
+           date - lubridate::as_date(paste0(year, "-01-01"))) %>% 
+  mutate(days_elapsed_since_jan_1 = as.numeric(days_elapsed_since_jan_1))
+
+
+g1 <- ggplot(sotu_modified) +
+  aes(x = year, y = month_day, label = last_name, 
+      col = election_year_plus_one) +
+  # geom_line(col = "steelblue",  alpha = .3) + 
+  geom_point(alpha = .7) +
+  theme_minimal() +
+  labs(x = "", y = "") +
+  scale_color_manual(values = c(  "steelblue", "grey"), 
+                     labels = c( "following", "not following"), breaks = c(1,0)) +
+  labs(title = "How late are State of the Union addresses usually delivered? ") +
+  labs(subtitle = "Data: Speeches from 1934 to 2018 from www.presidency.ucsb.edu") +
+  labs(caption = "Vis: @EvaMaeRey | Data Collection: github/BrianWeinstein/state-of-the-union") +
+  labs(color = "SOTU following \nelection year?")  + 
+  geom_smooth() + 
+  ggpmisc::stat_dens2d_filter(geom = "text_repel", keep.fraction = 0.25, size = 3.8)
+
+g1
+
+ggsave(filename = "figures/sotu_timing_delivery.png", plot = g1, height = 4)
+```
+
+
+```{r}
+sutu_modified_wo_1973 <- sotu_modified %>% filter(year != 1973)
+
+
+g2 <- ggplot(sotu_modified %>% filter(year != 1973)) +
+  aes(x = year, y = month_day, label = last_name, 
+      col = election_year_plus_one) +
+  # geom_line(col = "steelblue",  alpha = .3) + 
+  geom_point(alpha = .7) +
+  theme_minimal() +
+  labs(x = "", y = "") +
+  scale_color_manual(values = c(  "steelblue", "grey"), 
+                     labels = c( "following", "not following"), breaks = c(1,0)) +
+  labs(title = "How late are State of the Union addresses usually delivered? ") +
+  labs(subtitle = "Data: Speeches from 1934 to 2018 from www.presidency.ucsb.edu") +
+  labs(caption = "Vis: @EvaMaeRey | Data Collection: github/BrianWeinstein/state-of-the-union") +
+  labs(color = "SOTU following \nelection year?")  + 
+  geom_smooth(method = "lm") 
+
+g2
+
+ggsave(file = "figures/sotu_timing_model.png", plot = g2, height = 4)
+
+```
+
+# Modeling
+
+```{r}
+
+# model 1
+lateness_by_year <- 
+  lm(days_elapsed_since_jan_1 ~ year, 
+     data = sutu_modified_wo_1973)
+
+# model 2
+lateness_following_election <- 
+  lm(days_elapsed_since_jan_1 ~ election_year_plus_one, 
+     data = sutu_modified_wo_1973)
+
+# model 3
+lateness_full <- 
+  lm(days_elapsed_since_jan_1 ~ year + election_year_plus_one, 
+     data = sutu_modified_wo_1973)
+
+# model 3
+lateness_full_interaction <- 
+  lm(days_elapsed_since_jan_1 ~ year * election_year_plus_one , 
+     data = sutu_modified_wo_1973)
+```
+
+# Model diognostics
+
+> summary() returns details about the 
+
+```{r}
+summary(lateness_full_interaction)
+# some diognostics
+plot(lateness_full_interaction)
+```
+
+
+
+
+```{r, results='asis'}
+stargazer::stargazer(lateness_by_year, lateness_following_election, 
+                     lateness_full, lateness_full_interaction,
+                     type = "html",
+                     style = "qje")
+
+save(lateness_by_year, lateness_following_election, 
+     lateness_full, lateness_full_interaction, 
+     file = "data_products/models.Rdata")
+
+```
+
+```{r}
+sessionInfo()
+```
+
