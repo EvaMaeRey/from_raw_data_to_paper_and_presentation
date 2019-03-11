@@ -1,5 +1,5 @@
 # from_raw_data_to_paper_and_presentation
-This contains examples of how to implement a reproducible workflow using .Rmd files, from raw data to a research paper as well as presentation materials (slides and poster).
+This contains a bare-bones example of how to implement a reproducible workflow using .Rmd files, from raw data to a formatted research paper as well as presentation materials (slides and poster).
 
 
 Link to rendered html:
