@@ -1,9 +1,6 @@
 # Execute this code to run all source code
-knitr::knit("01_data_cleaning.Rmd")
-knitr::knit("02_analysis.Rmd")
-knitr::knit("10_paper.Rmd")
-knitr::knit("11_poster_professional.Rmd")
-knitr::knit("12_presentation_slides.Rmd")
-
-
-
+rmarkdown::render("01_data_cleaning.Rmd")
+rmarkdown::render("02_analysis.Rmd")
+rmarkdown::render("10_paper.Rmd")
+rmarkdown::render("11_poster_professional.Rmd")
+rmarkdown::render("12_presentation_slides.Rmd")
