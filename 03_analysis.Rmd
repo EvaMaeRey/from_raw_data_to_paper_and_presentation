@@ -72,7 +72,7 @@ g1 <- ggplot(sotu_modified) +
   scale_color_manual(values = c(  "steelblue", "grey"), 
                      labels = c( "following", "not following"), breaks = c(1,0)) +
   labs(title = "How late are State of the Union addresses usually delivered? ") +
-  labs(subtitle = "Data: Speeches from 1934 to 2018 from www.presidency.ucsb.edu") +
+  labs(subtitle = "Data: Speeches from 1934 to 2019 from www.presidency.ucsb.edu") +
   labs(caption = "Vis: @EvaMaeRey | Data Collection: github/BrianWeinstein/state-of-the-union") +
   labs(color = "SOTU following \nelection year?")  + 
   geom_smooth() + 

@@ -1,0 +1,24 @@
+---
+title: "Getting Data"
+author: "Evangeline Reynolds"
+date: "6/8/2019"
+output: html_document
+---
+
+
+I found data of interest put together for us already in Brian Weinstein's github repository. https://github.com/BrianWeinstein/state-of-the-union
+
+I ended up forking the repository.  I want to know that the data won't disappear if he deletes his repository or account. I think forking adresses that.
+
+https://raw.githubusercontent.com/EvaMaeRey/state-of-the-union/master/transcripts.csv
+
+Now, we'll do a conditional download.  If we've downloaded the csv already, R will skip this step. 
+
+```{r}
+url <- "https://raw.githubusercontent.com/EvaMaeRey/state-of-the-union/master/transcripts.csv"
+
+if (!file.exists("raw_data/transcripts.csv")) {
+  download.file(url = url, destfile = "raw_data/transcripts.csv")
+  }
+```
+
