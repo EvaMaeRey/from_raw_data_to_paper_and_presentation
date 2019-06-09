@@ -15,7 +15,9 @@ library(tidyverse)
 trump_2019 <- paste0(readLines("raw_data/trump_2019_cnn.txt"), collapse = "")
 
 sotu_texts <- read_csv(file = "raw_data/transcripts.csv") %>% 
-  bind_rows(data_frame(date = lubridate::as_date("2019-02-05"), president = "Donald J. Trump", transcript = trump_2019))
+  bind_rows(data_frame(date = lubridate::as_date("2019-02-05"), 
+                       president = "Donald J. Trump", 
+                       transcript = trump_2019))
 
 # once 2019 sotu is given, then you can add this one before saving out the object
 
@@ -23,7 +25,5 @@ save(sotu_texts, file = "data_products/sotu_texts.Rdata")
 
 ```
 
-```{r}
-sessionInfo()
-```
+
 

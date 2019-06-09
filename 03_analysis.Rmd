@@ -43,7 +43,8 @@ g0 <-
 
 g0
 
-ggsave("figures/num_speeches_per_pres.png", plot = g0, height = 5, width = 4)
+ggsave(filename = "figures/num_speeches_per_pres.png", 
+       plot = g0, height = 5, width = 4)
 ```
 
 
@@ -53,8 +54,10 @@ options(scipen = 10)
 
 sotu_modified <- sotu_texts %>% 
   mutate(year = lubridate::year(date)) %>% 
-  mutate(month_day = lubridate::as_date(str_replace(date, "\\d\\d\\d\\d", "2000"))) %>% 
-  mutate(id = 1:n()) %>% filter(year > 1934) %>% 
+  mutate(month_day = 
+           lubridate::as_date(str_replace(date, "\\d\\d\\d\\d", "2000"))) %>% 
+  mutate(id = 1:n()) %>% 
+  filter(year > 1934) %>% 
   mutate(last_name = str_extract(president, "\\w+$")) %>% 
   mutate(election_year_plus_one = year %in% seq(1933, 2017, by = 4)) %>% 
   mutate(days_elapsed_since_jan_1 = 
@@ -63,14 +66,17 @@ sotu_modified <- sotu_texts %>%
 
 
 g1 <- ggplot(sotu_modified) +
-  aes(x = year, y = month_day, label = last_name, 
-      col = election_year_plus_one) +
+  aes(x = year) +
+  aes(y = month_day) +
+  aes(label = last_name) +
+  aes(col = election_year_plus_one) +
   # geom_line(col = "steelblue",  alpha = .3) + 
   geom_point(alpha = .7) +
   theme_minimal() +
   labs(x = "", y = "") +
   scale_color_manual(values = c(  "steelblue", "grey"), 
-                     labels = c( "following", "not following"), breaks = c(1,0)) +
+                     labels = c( "following", "not following"), 
+                     breaks = c(1,0)) +
   labs(title = "How late are State of the Union addresses usually delivered? ") +
   labs(subtitle = "Data: Speeches from 1934 to 2019 from www.presidency.ucsb.edu") +
   labs(caption = "Vis: @EvaMaeRey | Data Collection: github/BrianWeinstein/state-of-the-union") +

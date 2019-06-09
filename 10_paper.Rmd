@@ -3,7 +3,7 @@ title: "State of the Union Addresses"
 author: "Gina Reynolds, Susie Q., Johny J."
 date: "2/2/2019"
 output: 
-  bookdown::html_document2:
+  bookdown::pdf_document2:
     toc: yes
 bibliography: literature/bibliography.bib
 ---
@@ -96,37 +96,37 @@ In figure \@ref(fig:year) we use LOESS smoothing to summarize the relationship b
 
 We load the models that we've estimated and save out,then prepare the table using stargazer.
 
-```{r regtable_html, results = "asis"}
-# load models that have been saved in .Rdata file previously
-load("data_products/models.Rdata")
-stargazer::stargazer(lateness_by_year,
-                     lateness_following_election, lateness_full, lateness_full_interaction,
-                     dep.var.labels = "Days elapsed since January 1st",
-                     covariate.labels = c("year", "post election", "year*post election"),
-                     title = "Models of time elapsed in year before state of the union address (#tab:regtable)",
-                     style = "qje",
-                     type = "html")
-```
-
-
-
-
-
-<!-- If compiling to pdf: in the ymal you will change: bookdown::pdf_document2.  Note that setting the label is done differently than the knit to html version.-->
-
-<!-- ```{r regtable_pdf,  results = "asis"} -->
+<!-- ```{r regtable_html, results = "asis"} -->
+<!-- # load models that have been saved in .Rdata file previously -->
 <!-- load("data_products/models.Rdata") -->
 <!-- stargazer::stargazer(lateness_by_year, -->
 <!--                      lateness_following_election, lateness_full, lateness_full_interaction, -->
 <!--                      dep.var.labels = "Days elapsed since January 1st", -->
 <!--                      covariate.labels = c("year", "post election", "year*post election"), -->
-<!--                      type = "latex", font.size = "tiny", -->
-<!--                      title  = "Models of time elapsed in year before state of the union address", -->
-<!--                      header = FALSE, -->
-<!--                      label = "tab:regtable" -->
-<!--                     ) -->
-<!-- # Todo figure out how to get stargazer message not to show -->
+<!--                      title = "Models of time elapsed in year before state of the union address (#tab:regtable)", -->
+<!--                      style = "qje", -->
+<!--                      type = "html") -->
 <!-- ``` -->
+
+
+
+
+
+If compiling to pdf: in the ymal you will change: bookdown::pdf_document2.  Note that setting the label is done differently than the knit to html version.
+
+```{r regtable_pdf,  results = "asis"}
+load("data_products/models.Rdata")
+stargazer::stargazer(lateness_by_year,
+                     lateness_following_election, lateness_full_interaction,
+                     dep.var.labels = "Days elapsed since January 1st",
+                     covariate.labels = c("year", "post election", "year*post election"),
+                     type = "latex", font.size = "small",
+                     title  = "Models of time elapsed in year before state of the union address",
+                     header = FALSE,
+                     label = "tab:regtable"
+                    )
+# Todo figure out how to get stargazer message not to show
+```
 
 
 
@@ -136,12 +136,24 @@ As you can see in the regression table \@ref(tab:regtable), the R^2 for the full
 The full model formula with the interaction is:
 
 
-$$ DaysSinceJan1 = \beta_0  + \beta_1YEAR + B_2FollowingElection + B_3Year*FollowingElection + \epsilon $$
+$$ DaysSinceJan1 = \beta_0  + \beta_1Year + B_2FollowingElection + B_3Year*FollowingElection + \epsilon $$
 
 ```{r, fig.cap = "Timing of state of the union by year.  SOTUs that follow election years are colored with blue.",  out.width='\\textwidth', fig.align='center'}
 # Include the figure that you have saved out in working files
 knitr::include_graphics("figures/sotu_timing_model.png")
 ```
+
+
+
+Need to put figures side-by-side?  Use fig.show = hold in the code chunk options, and specify the width
+
+
+```{r, fig.cap = "Timing of state of the union by year.  SOTUs that follow election years are colored with blue.",  out.width='45%', fig.align='center', fig.show= "hold"}
+# Include the figure that you have saved out in working files
+knitr::include_graphics(c("figures/sotu_timing_delivery.png", "figures/sotu_timing_model.png"))
+```
+
+
 
 
 Note that the visualization of the linear models do not represent the full model with the interaction but rather independent models for each category "following", "not following", the default for ggplot2.  Not going to worry about this.  

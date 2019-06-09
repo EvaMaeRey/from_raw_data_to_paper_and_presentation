@@ -22,3 +22,7 @@ if (!file.exists("raw_data/transcripts.csv")) {
   }
 ```
 
+
+```{r}
+sessionInfo()
+```
