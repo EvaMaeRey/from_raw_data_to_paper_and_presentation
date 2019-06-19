@@ -4,8 +4,10 @@ This contains a bare-bones example of how to implement a reproducible workflow u
 
 Link to rendered html:
 
-- [01_data_cleaning.html](https://evamaerey.github.io/from_raw_data_to_paper_and_presentation/01_data_cleaning.html)
-- [02_analysis.html](https://evamaerey.github.io/from_raw_data_to_paper_and_presentation/02_analysis.html)
+
+- [01_getting_data.html](https://evamaerey.github.io/from_raw_data_to_paper_and_presentation/01_getting_data.html)
+- [02_data_cleaning.html](https://evamaerey.github.io/from_raw_data_to_paper_and_presentation/02_data_cleaning.html)
+- [03_analysis.html](https://evamaerey.github.io/from_raw_data_to_paper_and_presentation/03_analysis.html)
 - [10_paper.html](https://evamaerey.github.io/from_raw_data_to_paper_and_presentation/10_paper.html)
 - [10_paper.pdf](https://evamaerey.github.io/from_raw_data_to_paper_and_presentation/10_paper.pdf)
 - [11_poster_professional.html](https://evamaerey.github.io/from_raw_data_to_paper_and_presentation/11_poster_professional.html)
