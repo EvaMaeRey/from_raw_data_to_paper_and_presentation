@@ -1,0 +1,154 @@
+---
+title: "Timing of State of the Union Addresses"
+author: "Gina Reynolds"
+date: "`r Sys.Date()`"
+output:
+  pagedown::html_paged:
+    toc: true
+    # change to true for a self-contained document, but it'll be a litte slower for Pandoc to render
+    self_contained: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Abstract
+
+State of the Union addresses are a classic corpus for students of text analysis.  To the author's knowledge, less has been done to characterize the timing of addresses.[^0]  In this paper you'll see time-in-year by year plots and a model of the timing.  
+
+[^0]: Motivation for addressing this question actually comes from Kenneth Benoit who conducted a quick [analysis](https://twitter.com/kenbenoit/status/1088304778088566785) on this question.  
+
+
+# Introduction
+
+The 2019 government shutdown had many people wondering, when will US State of the Union address be delivered by the President.  Will it be pushed later than what is considered "normal".[^1] I might have another tangential comment.[^2] 
+
+[^1]: Here is my tangential comment (footnote). It will appear at the end of the page or bottom of the document. 
+
+[^2]: Here is a second tangential point.
+
+# Literature Review
+
+The texts of the State of the Union addresses have been studied by scholars including Benoit, Munger and Spirling [-@benoit2018measuring]; they offer an interesting analysis of State of the Union addresses by US presidents, noting that SOTU that are not delivered orally tend to use more complex language. There are several R text analysis packages [@silge2016tidytext; @benoit2016quanteda].   These entries are included in the literature/bibliography.bib document that is referenced in the YMAL.  
+
+> In this section you might write quota a large selection which you will want to indent.
+
+
+# Theory and Hypotheses
+
+This analysis was exploratory.  It is well known that modern SOTU addresses are delivered early in the year.  After plotting the data, what seemed to matter was year of delivery, and if the SOTU followed an election year.  We tried to follow the advice in the e-book [The Fundamentals of Data Visualization](https://serialmentor.com/dataviz).
+
+The principles in TFODV are listed in Table \@ref(fig:goodbadugly)  
+
+Category | Description
+-----|------
+Bad  | Misrepresents data or confuse
+Ugly | Not pleasing
+Good | Not bad and not ugly
+
+Table: This is the caption for the table about data visualization categories from *"The Fundamentals of Data Visualization."*
+
+
+
+# Data 
+
+
+The corpus data was made available by  on github.  
+President in general give one SOTU address per year they serve as president but there are some exceptions as seen in table \@ref(tab:nice-tab) 
+
+
+```{r nice-tab}
+library(tidyverse)
+# load cleaned data
+load("data_products/sotu_texts.Rdata")
+sotu_texts_mod <- sotu_texts %>% 
+  mutate(president = fct_inorder(president)) %>% 
+  group_by(president) %>% tally() %>% 
+  rename(President = president) %>% 
+  rename(`Number of Addresses` = n) 
+
+knitr::kable(sotu_texts_mod %>% head(14), caption = "This table contains presidents and the number of SOTU that they have given")
+```
+
+
+# Analysis
+
+## Visual explorations of relationships
+
+Here I show some of the relationships in the data visually:
+
+```{r year, fig.cap = "Timing of state of the union by year.  SOTUs that follow election years are colored with blue.", out.width='\\textwidth', fig.align='center'}
+# Include the figure that you have saved out in working files
+knitr::include_graphics("figures/sotu_timing_delivery.png")
+```
+
+
+In figure \@ref(fig:year) blah blah blah.
+
+
+## Modeling
+
+
+<!-- If compiling to html: -->
+
+```{r regtable, results = "asis"}
+# load models that have been saved in .Rdata file previously
+load("data_products/models.Rdata")
+stargazer::stargazer(lateness_by_year,
+                     lateness_following_election, lateness_full, lateness_full_interaction,
+                     dep.var.labels = "Days elapsed since January 1st",
+                     covariate.labels = c("year", "post election", "year*post election"),
+                     title = "The table title",
+                     style = "qje",
+                     type = "html")
+```
+
+
+
+
+
+<!-- If compiling to pdf: -->
+
+<!-- ```{r regtable,  results = "asis"} -->
+<!-- load("data_products/models.Rdata") -->
+<!-- stargazer::stargazer(lateness_by_year, -->
+<!--                      lateness_following_election, lateness_full, lateness_full_interaction, -->
+<!--                      dep.var.labels = "Days elapsed since January 1st",  -->
+<!--                      covariate.labels = c("year", "post election", "year*post election"), -->
+<!--                      type = "latex", font.size = "tiny", -->
+<!--                      title  = "Models of time elapsed in year before state of the union address is given", -->
+<!--                      header = FALSE, -->
+<!--                      label=knitr::opts_current$get("label") -->
+<!--                     ) -->
+<!-- # Todo figure out how to get stargazer message not to show -->
+<!-- ``` -->
+
+As you can see in the regression table \@ref(tab:regtable)...
+
+The R^2 for the full model is `r round(summary(lateness_full_interaction)$r.squared, 3)`.
+
+
+The full model formula with the interaction is: 
+
+$$ DaysSinceJan1 = \beta_0  + \beta_1YEAR + B_2FollowingElection + B_3Year*FollowingElection + \epsilon $$
+
+```{r, fig.cap = "Timing of state of the union by year.  SOTUs that follow election years are colored with blue.",  out.width='\\textwidth', fig.align='center'}
+# Include the figure that you have saved out in working files
+knitr::include_graphics("figures/sotu_timing_model.png")
+```
+
+
+
+
+
+# Conclusion
+
+
+Here are some conclusions. Now is a good time to spell check.   
+
+
+# References 
+
+<!-- The bibliography will automatically appear here if you cite some sources.  -->
